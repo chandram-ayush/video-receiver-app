@@ -1,0 +1,29 @@
+name: Build Receiver APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          command: buildozer android debug
+          buildozer_version: 1.5.0
+        env:
+          ANDROID_NDK_VERSION: 25b
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: videoreceiver-apk
+          path: ${{ steps.buildozer.outputs.filename }}
