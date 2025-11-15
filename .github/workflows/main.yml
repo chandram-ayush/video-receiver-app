@@ -1,4 +1,4 @@
-name: Build Receiver APK
+name: Build Caller APK
 
 on:
   push:
@@ -7,7 +7,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest  # Changed from ubuntu-20.04
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
@@ -18,12 +19,10 @@ jobs:
         id: buildozer
         with:
           command: buildozer android debug
-          buildozer_version: 1.5.0
-        env:
-          ANDROID_NDK_VERSION: 25b
+          buildozer_version: stable
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: videoreceiver-apk
+          name: videocaller-apk
           path: ${{ steps.buildozer.outputs.filename }}
